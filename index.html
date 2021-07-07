@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width , initial-scale-1 , shrink-to-fit=no">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+	<title>Editor</title>
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<!-- <script src="js/scripts.js"></script> -->
+</head>
+<body>
+	<div class="loadingbar">
+		<img src="images/loadingbar1.gif" class="loadingbar">
+	</div>
+	<div id="page" class="container-fluid" >   <!-- style="background-color: black;" -->
+		<br><br>
+		<h1 class="text-center">ONLINE COMPILER</h1>
+		<div class="row">
+			<div class="col-md-6 col-sm-12" style="margin-bottom: 20px">
+				<div class="card">   <!-- style="background-color: black;" -->
+					<div class="card-header">
+						<div class="float-left">
+							<h3 class="text-info mb-3" style="text-align: center;">
+								Code Editor
+							</h3>
+						   <div class="selects">
+						   	<label for="language"  id="selLang">Language:</label>
+							<select name="language"  onclick="changeLanguage()" id="language">
+							  <option value="c" selected="selected">C</option>
+							  <option value="cpp">C++</option>
+							  <option value="python">Python</option>
+							  <option value="java">Java</option>
+							</select> 
+						    </div>
+						    <div class="selects">
+							 <label for="theme">Theme:</label>
+							<select name="theme" onchange="changeTheme()" id="theme">
+							   <option value="xcode">Xcode</option>
+							  <option value="twilight">Twilight</option>
+							   <option value="eclipse">Eclipse</option>
+							  <option value="github">Github</option>
+							  <option value="ambiance">Ambiance</option>
+							  <option value="chaos">Chaos</option>
+							  <option value="chrome">Chrome</option>
+							  <option value="clouds">Clouds</option>
+							  <option value="cobalt">Cobalt</option>
+							  <option value="crimson_editor">Crimson</option>
+							  <option value="dracula">Dracula</option>
+							  <option value="dreamweaver">Dream Weaver</option>
+							  <option value="sqlserver">SqlServer</option>
+							  <option value="terminal">Terminal</option>
+							  <option value="tomorrow">Tomorrow</option>
+							</select> 
+							<div class="form-group float-right ml-5">
+								<a id="savelink" class="button btn" onclick="save()"><i class="fa fa-download" aria-hidden="true" style="color: white"></i></a>
+								<!-- <button class="btn" onclick="save()"><i class="fa fa-share-alt" aria-hidden="true"><a></a></i></button> -->
+								<button class="btn" id="clear"><i class="fa fa-refresh"></i></i></button>
+								<button class="btn" id="run"><i class="fa fa-play" aria-hidden="true"></i></button>
+								<!-- <input type="button" id="clear" class="btn btn-primary btn-sm" value="Clear"> -->
+								<!-- <input type="button" id="run" class="btn btn-success btn-sm" value="Run"> -->
+							</div>
+							</div>
+						</div>
+					</div>
+					<div class="card-body">
+						<div id="myEditor" style="min-height: 90vh;"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 col-sm-12">
+				<div class="card" style="min-height: 25vh;">
+					<div class="card-header">    <!-- style="background-color: black;" -->
+						<h3 class="text-info">
+								Input Screen 
+						</h3>
+
+					</div>
+					<div class="card-body" id="input" >  <!-- style="background-color: black;" -->
+						<textarea  id="ip" placeholder="Enter your input here (if any)"></textarea>
+					</div>
+				</div>
+				<br>
+				<div class="card" style="min-height: 82vh;">
+					<div class="card-header">  <!-- style="background-color: black;" -->    
+						<h3 class="text-info">
+								Output Screen
+						</h3>
+
+					</div>
+					<div class="card-body" id="output">  <!-- style="background-color: black;" -->
+						
+					</div>
+					
+				</div>
+				<div  class="memtime">
+				<p id="memory"></p>
+				<p id="time" style="margin-left: 10px"></p>
+			    </div>
+			</div>
+		</div>
+	</div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.9/ace.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="js/scripts.js"></script>
+ 
+     <!--  var e=ace.edit('myEditor');
+      e.getSession().setMode('ace/mode/c_cpp')  
+      e.setTheme('ace/theme/twilight')   //set theme
+      e.setValue(`#include<stdio.h>
+int main(){
+      printf("Hi");
+      return 0;
+ }`)
+
+      $(document).ready(function(){
+      	$(document).on('click',"#run",async function(){
+      	$("#output").html("")
+      	var code=e.getValue();
+
+    const payload = {
+      language:"c",
+      code,
+    };
+    try {
+     const { data } = await axios.post("http://localhost:5000/run", payload);
+     $("#output").html(data.output)
+     console.log(data)
+    } catch ({response}) {
+      if (response) {
+        const errMsg = response.data.err.stderr;
+        $("#output").html(errMsg)
+        console.log(errMsg)
+      } else {
+      	$("#output").html("Please retry submitting")
+      	console.log("Please retry submitting.")
+      }
+    } 
+      	})
+      
+      })
+
+     
+
+//       // const btn = document.querySelector('#theme');
+//       const btn = document.querySelector('.btn-toggle');
+// // Listen for a click on the button
+// btn.addEventListener('click', function() {
+//   // Then toggle (add/remove) the .dark-theme class to the body
+//   console.log( document.body.classList)
+//   document.body.classList.toggle('dark-theme');  
+//   console.log( document.body.classList)
+// })
+
+
+   -->
+	
+
+</body>
+</html>
+
+
+
+  <!-- 	var myHeaders=new Headers();
+	    // myHeaders.append("Content-Type","application/json");
+	    // var raw=JSON.stringify({"code":code,"language":"c","input":""})
+	    // var requestOptions={
+	    //   method:"POST",
+	    //   headers:myHeaders,
+	    //   body:raw,
+	    //   redirect:"follow"
+	    // }
+
+	    // fetch("https://codexweb.netlify.app/netlify/functions/enforceCode",
+	    // requestOptions).then(response => response.text())
+	    // .then(result => console.log(result))
+	    // .catch(err => console.log(err))
+      		// $("#output").html(code) -->
